@@ -1,0 +1,19 @@
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.1s
+  Running TypeScript ...
+Failed to compile.
+
+./src/app/auth/register/page.tsx:63:73
+Type error: Expected 1 arguments, but got 2.
+
+[0m [90m 61 |[39m
+ [90m 62 |[39m             [90m// Success - Now sign in to get session[39m
+[31m[1m>[22m[39m[90m 63 |[39m             [36mconst[39m { error[33m:[39m signInError } [33m=[39m [36mawait[39m signIn(formData[33m.[39memail[33m,[39m formData[33m.[39mpassword)[33m;[39m
+ [90m    |[39m                                                                         [31m[1m^[22m[39m
+ [90m 64 |[39m
+ [90m 65 |[39m             [36mif[39m (signInError) {
+ [90m 66 |[39m                 [90m// If auto-signin fails (shouldn't happen if user is confirmed), redirect to login[39m[0m
+Next.js build worker exited with code: 1 and signal: null

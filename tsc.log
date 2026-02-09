@@ -1,0 +1,5 @@
+src/app/page.tsx(14,9): error TS2322: Type '{ onBack: () => void; merchantName: string; }' is not assignable to type 'IntrinsicAttributes & CheckoutPageProps'.
+  Property 'merchantName' does not exist on type 'IntrinsicAttributes & CheckoutPageProps'. Did you mean 'merchant'?
+src/app/page.tsx(21,7): error TS2322: Type '{ merchantName: string; merchantLogo: string; onCheckout: () => void; }' is not assignable to type 'IntrinsicAttributes & CatalogPageProps'.
+  Property 'merchantName' does not exist on type 'IntrinsicAttributes & CatalogPageProps'. Did you mean 'merchant'?
+src/components/checkout/CheckoutPage.tsx(459,26): error TS2367: This comparison appears to be unintentional because the types '"form"' and '"processing"' have no overlap.
