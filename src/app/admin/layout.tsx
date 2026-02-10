@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
-import { Link } from "lucide-react"; // Incorrect import, fixing in content below
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
 export default async function AdminLayout({
@@ -28,7 +27,7 @@ export default async function AdminLayout({
         .single();
 
     // FALLBACK FOR DEMO: If table is empty or specific email
-    const isHardcodedAdmin = user.email === 'admin@catalogo.uy';
+    const isHardcodedAdmin = user.email === 'neverrwork@gmail.com';
 
     if (!admin && !isHardcodedAdmin) {
         // If not admin, redirect to dashboard or home
