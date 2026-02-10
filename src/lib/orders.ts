@@ -37,6 +37,26 @@ export interface CreateOrderResult {
 }
 
 export async function createOrder(input: CreateOrderInput): Promise<CreateOrderResult> {
+    // Demo Mode Bypass
+    if (input.merchantId === '00000000-0000-0000-0000-000000000000') {
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate delay
+        return {
+            success: true,
+            order: {
+                id: 'demo-order-uuid',
+                merchant_id: input.merchantId,
+                customer_id: 'demo-customer',
+                order_number: `DEMO-${Math.floor(Math.random() * 1000)}`,
+                status: 'pending',
+                payment_status: 'pending',
+                total_uyu: input.items.reduce((acc, item) => acc + (item.unitPrice * item.quantity), 0) + input.deliveryCost,
+                created_at: new Date().toISOString(),
+                // Add other required fields with dummy data if needed by strict typing
+            } as any,
+            orderNumber: `DEMO-${Math.floor(Math.random() * 1000)}`,
+        };
+    }
+
     try {
         // Calculate totals
         const subtotal = input.items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
