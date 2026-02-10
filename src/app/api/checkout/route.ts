@@ -11,6 +11,14 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Order ID and Merchant ID required' }, { status: 400 });
         }
 
+        // Demo Mode Bypass
+        if (merchantId === '00000000-0000-0000-0000-000000000000') {
+            return NextResponse.json({
+                init_point: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?orderId=${orderId}`,
+                preference_id: 'demo-preference-id'
+            });
+        }
+
         // 1. Get Access Token for the Merchant
         const { data: merchant, error: merchantError } = await supabaseAdmin
             .from('merchants')
