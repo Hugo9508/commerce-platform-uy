@@ -7,36 +7,58 @@ import { CheckCircle2, ArrowLeft, Phone, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getOrderWithItems } from "@/lib/orders";
+import { createClient } from "@/lib/supabase";
 
 function SuccessContent() {
     const searchParams = useSearchParams();
     const orderId = searchParams.get("orderId");
     const [loading, setLoading] = useState(true);
     const [order, setOrder] = useState<any>(null);
+    const [merchantPhone, setMerchantPhone] = useState<string>("");
 
     useEffect(() => {
-        if (orderId) {
-            // Demo mode check
-            if (orderId === 'demo-order-uuid') {
-                setOrder({
-                    order_number: 'DEMO-123',
-                    customer_phone: '099123456',
-                    merchant_id: '00000000-0000-0000-0000-000000000000'
-                });
+        const fetchOrderAndMerchant = async () => {
+            if (!orderId) {
                 setLoading(false);
                 return;
             }
 
-            // Real mode fetch
-            getOrderWithItems(orderId)
-                .then((data) => {
-                    setOrder(data);
-                })
-                .catch((err) => console.error(err))
-                .finally(() => setLoading(false));
-        } else {
-            setLoading(false);
-        }
+            // Demo mode check
+            if (orderId === 'demo-order-uuid') {
+                setOrder({
+                    order_number: 'DEMO-123',
+                    merchant_id: '00000000-0000-0000-0000-000000000000'
+                });
+                setMerchantPhone('099123456'); // Demo Number
+                setLoading(false);
+                return;
+            }
+
+            try {
+                // Real mode fetch
+                const orderData = await getOrderWithItems(orderId);
+                setOrder(orderData);
+
+                if (orderData?.merchant_id) {
+                    const supabase = createClient();
+                    const { data: merchant } = await supabase
+                        .from('merchants')
+                        .select('whatsapp')
+                        .eq('id', orderData.merchant_id)
+                        .single();
+
+                    if (merchant?.whatsapp) {
+                        setMerchantPhone(merchant.whatsapp.replace(/\D/g, ''));
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchOrderAndMerchant();
     }, [orderId]);
 
     if (loading) {
@@ -77,9 +99,9 @@ function SuccessContent() {
                     </Button>
                 </Link>
 
-                {order && (
+                {merchantPhone && (
                     <a
-                        href={`https://wa.me/?text=Hola, acabo de hacer el pedido #${order.order_number}`}
+                        href={`https://wa.me/${merchantPhone}?text=Hola, acabo de hacer el pedido #${order?.order_number || ''}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="block w-full"
