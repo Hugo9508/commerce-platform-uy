@@ -13,8 +13,9 @@ export async function POST(request: Request) {
 
         // Demo Mode Bypass
         if (merchantId === '00000000-0000-0000-0000-000000000000') {
+            const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://commerce-platform-uy.vercel.app';
             return NextResponse.json({
-                init_point: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?orderId=${orderId}`,
+                init_point: `${origin}/checkout/success?orderId=${orderId}`,
                 preference_id: 'demo-preference-id'
             });
         }
